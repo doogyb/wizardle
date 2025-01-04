@@ -1,9 +1,8 @@
 package main
 
 type Quote struct {
-
-		Speaker string `json:"speaker"`
-		Cue string `json:"cue"`
-		Content string `json:"content"`
-		Book string `json:"book"`	
+	Book    string `json:"book"`
+	Chapter string `json:"chapter"`
+	Speaker string `json:"speaker"`
+	Content string `json:"content"`
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 
 	"encoding/json"
@@ -12,16 +13,25 @@ func loadQuotes() []Quote {
 
 	var quotes []Quote
 
-	jsonFile, err := os.Open("../ds/data/quotes.json")
-
+	entries, err := os.ReadDir("../ds/data/quotes")
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
-	defer jsonFile.Close()
+	for _, e := range entries {
+		var book []Quote
+		jsonFile, err := os.Open(fmt.Sprintf("../ds/data/quotes/%s", e.Name()))
 
-	byteValue, _ := io.ReadAll(jsonFile)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-	json.Unmarshal(byteValue, &quotes)
+		defer jsonFile.Close()
+		byteValue, _ := io.ReadAll(jsonFile)
+
+		json.Unmarshal(byteValue, &book)
+		quotes = append(quotes, book...)
+	}
+
 	return quotes
 }
