@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"io"
-	"log"
 	"os"
+	"log"
 
 	"encoding/json"
 )
@@ -13,25 +12,16 @@ func loadQuotes() []Quote {
 
 	var quotes []Quote
 
-	entries, err := os.ReadDir("../ds/data/quotes")
+	jsonFile, err := os.Open("../ds/data/quotes/filtered.json")
+	defer jsonFile.Close()
+
 	if err != nil {
 		log.Fatal(err)
+		return quotes
 	}
 
-	for _, e := range entries {
-		var book []Quote
-		jsonFile, err := os.Open(fmt.Sprintf("../ds/data/quotes/%s", e.Name()))
+	byteValue, _ := io.ReadAll(jsonFile)
 
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		defer jsonFile.Close()
-		byteValue, _ := io.ReadAll(jsonFile)
-
-		json.Unmarshal(byteValue, &book)
-		quotes = append(quotes, book...)
-	}
-
+	json.Unmarshal(byteValue, &quotes)
 	return quotes
 }
